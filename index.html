@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物业管家工作助手</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8D5A0;
+    --gold-dark: #8B6914;
+    --ink: #1A1A2E;
+    --ink-mid: #2D3561;
+    --ink-light: #4A5280;
+    --surface: #FAFAF7;
+    --surface-alt: #F2F0E8;
+    --border: rgba(201,168,76,0.25);
+    --border-strong: rgba(201,168,76,0.5);
+    --text-main: #1A1A2E;
+    --text-muted: #6B6F8A;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(26,26,46,0.08);
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--surface);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--ink);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--gold) 0%, #E8C875 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--ink);
+  }
+
+  .logo-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  .logo-sub {
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    font-weight: 300;
+  }
+
+  .header-badge {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid var(--border-strong);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--ink);
+    padding: 56px 2rem 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(201,168,76,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .ornament-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+  .ornament-line.right {
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .ornament-diamond {
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .hero h1 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 4px;
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+
+  .hero h1 span {
+    color: var(--gold);
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 1px;
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* ── Category Pills ── */
+  .categories-bar {
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 2rem;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cat-pill {
+    background: #fff;
+    border: 1px solid var(--border-strong);
+    border-radius: 24px;
+    padding: 7px 18px;
+    font-size: 13px;
+    color: var(--ink-light);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  .cat-pill:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  .cat-pill .num {
+    background: rgba(201,168,76,0.2);
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 4px;
+    color: var(--gold-dark);
+  }
+
+  /* ── Main Layout ── */
+  .main {
+    flex: 1;
+    display: flex;
+    padding: 2rem;
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-section {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .sidebar-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .sidebar-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 6px;
+    padding: 10px 8px;
+    margin: 0 -8px;
+  }
+
+  .feature-item:last-child {
+    border-bottom: none;
+  }
+
+  .feature-item:hover {
+    background: rgba(201,168,76,0.08);
+  }
+
+  .feature-num {
+    width: 24px;
+    height: 24px;
+    background: var(--ink);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .feature-name {
+    font-size: 13px;
+    color: var(--text-main);
+    line-height: 1.4;
+    padding-top: 3px;
+  }
+
+  .tip-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.03));
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Chat Area ── */
+  .chat-wrap {
+    flex: 1;
+    min-width: 0;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    background: var(--ink);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .chat-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .chat-title-text {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  #coze-chat-container {
+    flex: 1;
+    min-height: 500px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--ink);
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding: 16px 2rem;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 1px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 860px) {
+    .main { flex-direction: column; padding: 1rem; }
+    .sidebar { width: 100%; }
+    .categories-bar { padding: 12px 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="#1A1A2E" stroke-width="1.5"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">物业管家助手</div>
+      <div class="logo-sub">PROPERTY MANAGEMENT AI</div>
+    </div>
+  </div>
+  <div class="header-badge">AI 智能生成</div>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-ornament">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-line right"></div>
+  </div>
+  <h1>专业文书，<span>一键生成</span></h1>
+  <p>告别不知道怎么措辞的烦恼，六类工作场景全覆盖</p>
+</div>
+
+<!-- Category Bar -->
+<div class="categories-bar">
+  <div class="cat-pill"><span class="num">1</span>业主投诉回复</div>
+  <div class="cat-pill"><span class="num">2</span>欠费催缴通知</div>
+  <div class="cat-pill"><span class="num">3</span>安全隐患整改通知</div>
+  <div class="cat-pill"><span class="num">4</span>工程整改通知函</div>
+  <div class="cat-pill"><span class="num">5</span>装修申请审批回复</div>
+  <div class="cat-pill"><span class="num">6</span>业主大会通知</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">六大功能</div>
+      <div class="feature-item">
+        <div class="feature-num">1</div>
+        <div class="feature-name">业主投诉回复</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">2</div>
+        <div class="feature-name">欠费催缴通知</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">3</div>
+        <div class="feature-name">安全隐患整改通知</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">4</div>
+        <div class="feature-name">工程整改通知函</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">5</div>
+        <div class="feature-name">装修申请审批回复</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">6</div>
+        <div class="feature-name">业主大会通知</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">使用提示</div>
+      <div class="tip-box">
+        直接描述您的工作场景，AI 将自动识别类型并生成对应格式的专业文书。您也可以点击上方分类标签快速开始。
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">示例输入</div>
+      <div class="tip-box" style="margin-bottom:10px">
+        💬 "302 业主反映走廊灯泡长期不亮，请回复"
+      </div>
+      <div class="tip-box" style="margin-bottom:10px">
+        💬 "301 室拖欠三个月物业费，需要催缴"
+      </div>
+      <div class="tip-box">
+        💬 "地下车库存在消防通道堵塞隐患，生成整改通知"
+      </div>
+    </div>
+  </aside>
+
+  <!-- Chat Area -->
+  <div class="chat-wrap">
+    <div class="chat-header">
+      <div class="chat-title-text">物业管家 AI 助手</div>
+      <div class="chat-status">
+        <div class="status-dot"></div>
+        在线服务中
+      </div>
+    </div>
+    <div id="coze-chat-container"></div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer>
+  © 2025 物业管家工作助手 &nbsp;·&nbsp; Powered by Coze AI &nbsp;·&nbsp; 专业文书智能生成平台
+</footer>
+
+<!-- Coze SDK -->
+<script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js"></script>
+<script>
+  new CozeWebSDK.WebChatClient({
+    config: {
+      bot_id: '7644910091674075163',
+    },
+    el: document.getElementById('coze-chat-container'),
+    componentProps: {
+      title: '物业管家助手',
+      placeholder: '请描述您的工作场景，例如：业主投诉电梯故障、欠费催缴...',
+    },
+    auth: {
+      type: 'token',
+      token: 'pat_********',
+      onRefreshToken: function () {
+        return 'pat_********'
+      }
+    }
+  });
+
+  // Category pill click → fill chat
+  document.querySelectorAll('.cat-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const labels = {
+        '业主投诉回复': '我需要回复一位业主的投诉，请帮我生成业主投诉回复文书。',
+        '欠费催缴通知': '我需要生成一份欠费催缴通知，请帮我拟写正式催缴函。',
+        '安全隐患整改通知': '小区存在安全隐患，请帮我生成安全隐患整改通知书。',
+        '工程整改通知函': '工程施工存在问题，请帮我生成工程整改通知函。',
+        '装修申请审批回复': '业主提交了装修申请，请帮我生成装修审批回复文书。',
+        '业主大会通知': '即将召开业主大会，请帮我生成业主大会通知公告。',
+      };
+      const text = pill.textContent.replace(/^\d/, '').trim();
+      const matched = Object.entries(labels).find(([k]) => text.includes(k));
+      if (matched) {
+        alert('提示：请在下方对话框输入：\n\n' + matched[1]);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
